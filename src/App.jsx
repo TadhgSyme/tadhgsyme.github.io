@@ -1,12 +1,1 @@
-import React from 'react';
-
-const BookBasket = () => {
-    return (
-        <div>
-            <h1>Book Basket</h1>
-            {/* Your Book Basket component code goes here */}
-        </div>
-    );
-};
-
-export default BookBasket;
+import React, { useState } from 'react';\n\nconst BookBasket = () => {\n  const [books, setBooks] = useState([]);\n  const [reviews, setReviews] = useState({});\n  const [votes, setVotes] = useState({});\n  const [newReview, setNewReview] = useState('');\n\n  const addBook = (book) => {\n    setBooks([...books, book]);\n  };\n\n  const addReview = (bookId) => {\n    setReviews({ ...reviews, [bookId]: [...(reviews[bookId] || []), newReview] });\n    setNewReview('');\n  };\n\n  const vote = (bookId, voteType) => {\n    setVotes({ ...votes, [bookId]: (votes[bookId] || 0) + (voteType === 'up' ? 1 : -1) });\n  };\n\n  return (\n    <div aria-label="Book Basket">\n      <h1>Book Basket</h1>\n      <div>\n        {books.map((book, index) => (\n          <div key={index} role="article">\n            <h2>{book.title}</h2>\n            <p>{book.author}</p>\n            <div>\n              <button onClick={() => vote(book.id, 'up')} aria-label="Vote Up">👍</button>\n              <span>{votes[book.id] || 0}</span>\n              <button onClick={() => vote(book.id, 'down')} aria-label="Vote Down">👎</button>\n            </div>\n            <div>\n              <h3>Reviews</h3>\n              {reviews[book.id]?.map((review, idx) => (\n                <p key={idx}>{review}</p>\n              ))} \n              <input\n                type="text"\n                value={newReview}\n                onChange={(e) => setNewReview(e.target.value)}\n                aria-label="New Review"\n              />\n              <button onClick={() => addReview(book.id)} aria-label="Submit Review">Submit Review</button>\n            </div>\n          </div>\n        ))} \n      </div>\n      <button onClick={() => addBook({ title: 'New Book', author: 'Author Name', id: books.length + 1 })}>Add Book</button>\n    </div>\n  );\n};\n\nexport default BookBasket;
